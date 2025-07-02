@@ -1,0 +1,31 @@
+.github
+.vs
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio folder
+.vs/
+
+# ASP.NET specific
+wwwroot/
+appsettings.Development.json
+
+# Entity Framework
+Migrations/
+
+# Node modules (if any)
+node_modules/
+
+# Others
+*.db
+*.log
+*.cache
+.env
