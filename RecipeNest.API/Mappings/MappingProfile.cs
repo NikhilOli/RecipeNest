@@ -10,6 +10,9 @@ namespace RecipeNest.API.Mappings
         {
             CreateMap<ChefWriteDto, Chef>();
             CreateMap<Chef, ChefReadDto>();
+            CreateMap<Recipe, RecipeReadDto>()
+                .ForMember(dest => dest.ChefName, opt => opt.MapFrom(src => src.Chef!.Name));
+            CreateMap<RecipeCreateDto, Recipe>();
         }
     }
 }

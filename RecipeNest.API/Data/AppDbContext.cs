@@ -10,6 +10,8 @@ namespace RecipeNest.API.Data
 
         // One DbSet per entity (use plural names)
         public DbSet<Chef> Chefs => Set<Chef>();
+        public DbSet<Recipe> Recipes => Set<Recipe>();
+
         // public DbSet<Recipe> Recipes => Set<Recipe>();
         // public DbSet<FoodLover> FoodLovers => Set<FoodLover>();
         // public DbSet<Rating> Ratings => Set<Rating>();
