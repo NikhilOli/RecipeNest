@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
 using RecipeNest.API.Entities;
 using RecipeNest.API.Models;
 using RecipeNest.API.Services;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-
 
 namespace RecipeNest.API.Controllers
 {
@@ -16,7 +13,7 @@ namespace RecipeNest.API.Controllers
     public class ChefsController : ControllerBase
     {
         private readonly AppDbContext _db;
-        private readonly IMapper _mapper;        
+        private readonly IMapper _mapper;
         private readonly AuthService _auth;
 
         public ChefsController(AppDbContext db, IMapper mapper, AuthService auth)
@@ -30,30 +27,33 @@ namespace RecipeNest.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(ChefWriteDto dto)
         {
-            if (await _db.Chefs.AnyAsync(c => c.Email == dto.Email))
+            if (await _db.Users.AnyAsync(u => u.Email == dto.Email))
                 return BadRequest("Email already taken");
 
             var chef = _mapper.Map<Chef>(dto);
             chef.PasswordHash = _auth.HashPassword(chef, dto.Password);
+            chef.Role = "Chef";
 
-            _db.Chefs.Add(chef);
+            _db.Users.Add(chef); // ✅ Use base DbSet<User>
             await _db.SaveChangesAsync();
 
             var readDto = _mapper.Map<ChefReadDto>(chef);
-            return CreatedAtAction(nameof(GetById), new { id = chef.ChefId }, readDto);
+            return CreatedAtAction(nameof(GetById), new { id = chef.UserId }, readDto);
         }
 
         // GET api/chefs/{id}
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<ChefReadDto>> GetById(Guid id)
         {
-            var chef = await _db.Chefs.FindAsync(id);
+            var chef = await _db.Users.OfType<Chef>().FirstOrDefaultAsync(c => c.UserId == id);
             return chef is null ? NotFound() : Ok(_mapper.Map<ChefReadDto>(chef));
         }
 
         // GET api/chefs
         [HttpGet]
         public async Task<IEnumerable<ChefReadDto>> GetAll() =>
-            await _db.Chefs.ProjectTo<ChefReadDto>(_mapper.ConfigurationProvider).ToListAsync();
+            await _db.Users.OfType<Chef>()
+                .Select(f => _mapper.Map<ChefReadDto>(f))
+                .ToListAsync();
     }
 }

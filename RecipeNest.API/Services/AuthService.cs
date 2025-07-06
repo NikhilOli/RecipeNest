@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using RecipeNest.API.Entities;
 
-
 namespace RecipeNest.API.Services
 {
     public class AuthService
     {
-        private readonly PasswordHasher<Chef> _hasher = new();
+        private readonly PasswordHasher<User> _hasher = new();
 
-        public string HashPassword(Chef chef, string plainPw) =>
-            _hasher.HashPassword(chef, plainPw);
+        public string HashPassword(User user, string plainPassword) =>
+            _hasher.HashPassword(user, plainPassword);
 
-        public bool VerifyPassword(Chef chef, string plainPw) =>
-            _hasher.VerifyHashedPassword(chef, chef.PasswordHash, plainPw)
-                   == PasswordVerificationResult.Success;
+        public bool VerifyPassword(User user, string plainPassword) =>
+            _hasher.VerifyHashedPassword(user, user.PasswordHash, plainPassword) == PasswordVerificationResult.Success;
     }
-
 }
