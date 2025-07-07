@@ -11,10 +11,10 @@ namespace RecipeNest.API.Entities
         public Guid RecipeId { get; set; }
 
         [Required]
-        public Guid ChefId { get; set; }
+        public Guid UserId { get; set; }
 
-        [ForeignKey("ChefId")]
-        public Chef? Chef { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public Chef Chef { get; set; }
 
         [Required, MaxLength(100)]
         public string Title { get; set; } = string.Empty;

@@ -28,7 +28,7 @@ namespace RecipeNest.API.Data
             modelBuilder.Entity<Recipe>()
                 .HasOne(r => r.Chef)
                 .WithMany(c => c.Recipes)
-                .HasForeignKey(r => r.ChefId)
+                .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict); 
         }
     }
