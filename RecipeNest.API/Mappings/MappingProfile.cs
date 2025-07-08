@@ -21,6 +21,10 @@ namespace RecipeNest.API.Mappings
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ReverseMap();
 
+            CreateMap<RatingCreateDto, Rating>();
+            CreateMap<Rating, RatingReadDto>();
+
+
         }
     }
 }

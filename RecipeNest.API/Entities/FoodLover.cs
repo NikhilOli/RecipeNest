@@ -4,5 +4,7 @@
     {
         public ICollection<RecipeLike> LikedRecipes { get; set; } = new List<RecipeLike>();
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+        public ICollection<Follow> Following { get; set; } = new List<Follow>();
+
     }
 }

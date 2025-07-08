@@ -15,6 +15,8 @@ namespace RecipeNest.API.Data
         public DbSet<Recipe> Recipes => Set<Recipe>();
         public DbSet<RecipeLike> RecipeLikes => Set<RecipeLike>();
         public DbSet<Rating> Ratings => Set<Rating>();
+        public DbSet<Follow> Follows => Set<Follow>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,14 +24,29 @@ namespace RecipeNest.API.Data
                 .HasValue<Chef>("Chef")
                 .HasValue<FoodLover>("FoodLover");
 
-            modelBuilder.Entity<RecipeLike>().HasKey(x => new { x.FoodLoverId, x.RecipeId });
+            modelBuilder.Entity<RecipeLike>().HasKey(x => new { x.UserId, x.RecipeId });
             modelBuilder.Entity<Rating>().HasKey(x => x.RatingId);
 
             modelBuilder.Entity<Recipe>()
                 .HasOne(r => r.Chef)
                 .WithMany(c => c.Recipes)
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Follow>()
+                .HasKey(f => new { f.FollowerId, f.FollowingId });
+
+            modelBuilder.Entity<Follow>()
+                .HasOne(f => f.Follower)
+                .WithMany(f => f.Following)
+                .HasForeignKey(f => f.FollowerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Follow>()
+                .HasOne(f => f.Following)
+                .WithMany(c => c.Followers)
+                .HasForeignKey(f => f.FollowingId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
