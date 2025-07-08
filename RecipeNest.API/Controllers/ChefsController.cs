@@ -34,7 +34,7 @@ namespace RecipeNest.API.Controllers
             chef.PasswordHash = _auth.HashPassword(chef, dto.Password);
             chef.Role = "Chef";
 
-            _db.Users.Add(chef); // ✅ Use base DbSet<User>
+            _db.Users.Add(chef); 
             await _db.SaveChangesAsync();
 
             var readDto = _mapper.Map<ChefReadDto>(chef);

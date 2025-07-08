@@ -10,5 +10,6 @@
         public User User { get; set; }
         public int Stars { get; set; }
         public string? Comment { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

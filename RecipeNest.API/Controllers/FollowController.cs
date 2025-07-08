@@ -81,5 +81,19 @@ namespace RecipeNest.API.Controllers
 
             return Ok(following);
         }
+
+        // UNFOLLOW CHEF /api/recipeactions/unfollow?followerId=...&followingId=...
+        [HttpDelete("unfollow")]
+        public async Task<IActionResult> UnfollowChef(Guid followerId, Guid followingId)
+        {
+            var follow = await _db.Follows.FindAsync(followerId, followingId);
+            if (follow == null) return NotFound("Follow relationship not found");
+
+            _db.Follows.Remove(follow);
+            await _db.SaveChangesAsync();
+            return Ok("Unfollowed successfully");
+        }
+
+
     }
 }

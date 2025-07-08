@@ -16,4 +16,11 @@
         public int Stars { get; set; }
         public string? Comment { get; set; }
     }
+
+    public class RatingUpdateDto
+    {
+        public Guid RatingId { get; set; }
+        public int Stars { get; set; }
+        public string? Comment { get; set; }
+    }
 }

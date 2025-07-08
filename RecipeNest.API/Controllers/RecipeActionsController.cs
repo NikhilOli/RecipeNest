@@ -63,6 +63,18 @@ namespace RecipeNest.API.Controllers
             return Ok(likes);
         }
 
+        // UNLIKE RECIPE /api/recipeactions/unlike?userId=...&recipeId=...
+        [HttpDelete("unlike")]
+        public async Task<IActionResult> UnlikeRecipe(Guid userId, Guid recipeId)
+        {
+            var like = await _db.RecipeLikes.FindAsync(userId, recipeId);
+            if (like == null) return NotFound("Like not found");
+
+            _db.RecipeLikes.Remove(like);
+            await _db.SaveChangesAsync();
+            return Ok("Recipe unliked");
+        }
+
         // POST api/recipeactions/rate
         [HttpPost("rate")]
         public async Task<IActionResult> RateRecipe(Guid recipeId, Guid userId, int stars, string? comment)
@@ -102,5 +114,21 @@ namespace RecipeNest.API.Controllers
 
             return Ok(ratings);
         }
+
+        // UPDATE RATING /api/recipeactions/rate
+        [HttpPut("rate")]
+        public async Task<IActionResult> UpdateRating([FromBody] RatingUpdateDto dto)
+        {
+            var rating = await _db.Ratings.FindAsync(dto.RatingId);
+            if (rating == null) return NotFound("Rating not found");
+
+            rating.Stars = dto.Stars;
+            rating.Comment = dto.Comment;
+            rating.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+            return Ok("Rating updated");
+        }
+
     }
 }
