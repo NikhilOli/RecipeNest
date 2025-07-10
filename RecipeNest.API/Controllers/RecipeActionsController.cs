@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
@@ -22,6 +23,7 @@ namespace RecipeNest.API.Controllers
 
         // POST api/recipeactions/like
         [HttpPost("like")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> LikeRecipe(Guid recipeId, Guid userId)
         {
             var user = await _db.Users.OfType<FoodLover>().FirstOrDefaultAsync(u => u.UserId == userId);
@@ -65,6 +67,7 @@ namespace RecipeNest.API.Controllers
 
         // UNLIKE RECIPE /api/recipeactions/unlike?userId=...&recipeId=...
         [HttpDelete("unlike")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> UnlikeRecipe(Guid userId, Guid recipeId)
         {
             var like = await _db.RecipeLikes.FindAsync(userId, recipeId);
@@ -77,6 +80,7 @@ namespace RecipeNest.API.Controllers
 
         // POST api/recipeactions/rate
         [HttpPost("rate")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> RateRecipe(Guid recipeId, Guid userId, int stars, string? comment)
         {
             var user = await _db.Users.OfType<FoodLover>().FirstOrDefaultAsync(u => u.UserId == userId);
@@ -117,6 +121,7 @@ namespace RecipeNest.API.Controllers
 
         // UPDATE RATING /api/recipeactions/rate
         [HttpPut("rate")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> UpdateRating([FromBody] RatingUpdateDto dto)
         {
             var rating = await _db.Ratings.FindAsync(dto.RatingId);

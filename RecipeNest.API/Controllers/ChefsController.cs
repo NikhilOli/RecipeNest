@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
 using RecipeNest.API.Entities;
 using RecipeNest.API.Models;
 using RecipeNest.API.Services;
-using AutoMapper;
 
 namespace RecipeNest.API.Controllers
 {
@@ -25,6 +26,7 @@ namespace RecipeNest.API.Controllers
 
         // POST api/chefs/register
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(ChefWriteDto dto)
         {
             if (await _db.Users.AnyAsync(u => u.Email == dto.Email))
@@ -43,6 +45,7 @@ namespace RecipeNest.API.Controllers
 
         // GET api/chefs/{id}
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Chef")]
         public async Task<ActionResult<ChefReadDto>> GetById(Guid id)
         {
             var chef = await _db.Users.OfType<Chef>().FirstOrDefaultAsync(c => c.UserId == id);

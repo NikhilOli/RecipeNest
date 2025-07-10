@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
 using RecipeNest.API.Entities;
@@ -18,6 +19,7 @@ namespace RecipeNest.API.Controllers
 
         // POST: api/follow
         [HttpPost]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> FollowChef(Guid followerId, Guid followingId)
         {
             if (followerId == followingId)
@@ -47,6 +49,7 @@ namespace RecipeNest.API.Controllers
 
         // GET: api/follow/followers/{chefId}
         [HttpGet("followers/{chefId:guid}")]
+        [Authorize(Roles = "Chef")]
         public async Task<IActionResult> GetFollowers(Guid chefId)
         {
             var followers = await _db.Follows
@@ -65,6 +68,7 @@ namespace RecipeNest.API.Controllers
 
         // GET: api/follow/following/{foodLoverId}
         [HttpGet("following/{foodLoverId:guid}")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> GetFollowing(Guid foodLoverId)
         {
             var following = await _db.Follows
@@ -84,6 +88,7 @@ namespace RecipeNest.API.Controllers
 
         // UNFOLLOW CHEF /api/recipeactions/unfollow?followerId=...&followingId=...
         [HttpDelete("unfollow")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> UnfollowChef(Guid followerId, Guid followingId)
         {
             var follow = await _db.Follows.FindAsync(followerId, followingId);
@@ -93,7 +98,5 @@ namespace RecipeNest.API.Controllers
             await _db.SaveChangesAsync();
             return Ok("Unfollowed successfully");
         }
-
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,7 @@ namespace RecipeNest.API.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(FoodLoverWriteDto dto)
         {
             if (await _db.Users.AnyAsync(u => u.Email == dto.Email))
@@ -42,6 +44,7 @@ namespace RecipeNest.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "FoodLover")]
         public async Task<ActionResult<FoodLoverReadDto>> GetById(Guid id)
         {
             var user = await _db.Users.OfType<FoodLover>().FirstOrDefaultAsync(u => u.UserId == id);

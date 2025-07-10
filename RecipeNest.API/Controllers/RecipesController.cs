@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
@@ -22,6 +23,7 @@ namespace RecipeNest.API.Controllers
 
         // POST api/recipes
         [HttpPost]
+        [Authorize(Roles = "Chef")]
         public async Task<IActionResult> Create(RecipeCreateDto dto)
         {
             var chef = await _db.Users
@@ -69,6 +71,7 @@ namespace RecipeNest.API.Controllers
 
         // PUT api/recipes/{id}
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Chef")]
         public async Task<IActionResult> Update(Guid id, RecipeCreateDto dto)
         {
             var recipe = await _db.Recipes.FirstOrDefaultAsync(r => r.RecipeId == id);
@@ -83,6 +86,8 @@ namespace RecipeNest.API.Controllers
 
         // DELETE api/recipes/{id}
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Chef")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var recipe = await _db.Recipes.FindAsync(id);

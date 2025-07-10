@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
@@ -21,6 +22,7 @@ namespace RecipeNest.API.Controllers
 
         // GET ALL USERS
         [HttpGet("users")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _db.Users.ToListAsync();
@@ -29,6 +31,7 @@ namespace RecipeNest.API.Controllers
 
         // DELETE USER
         [HttpDelete("users/{id:guid}")]
+        [Authorize(Roles = "Admin,Chef,FoodLover")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             var user = await _db.Users.FindAsync(id);
@@ -41,6 +44,7 @@ namespace RecipeNest.API.Controllers
 
         // GET ALL RATINGS
         [HttpGet("ratings")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllRatings()
         {
             var ratings = await _db.Ratings.Include(r => r.Recipe).Include(r => r.User).ToListAsync();
@@ -49,6 +53,7 @@ namespace RecipeNest.API.Controllers
 
         // GET ALL LIKES
         [HttpGet("likes")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllLikes()
         {
             var likes = await _db.RecipeLikes.Include(l => l.Recipe).Include(l => l.User).ToListAsync();
@@ -57,6 +62,8 @@ namespace RecipeNest.API.Controllers
 
         // GET ALL FOLLOWS
         [HttpGet("follows")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> GetAllFollows()
         {
             var follows = await _db.Follows
