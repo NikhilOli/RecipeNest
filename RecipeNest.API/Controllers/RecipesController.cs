@@ -24,20 +24,58 @@ namespace RecipeNest.API.Controllers
         // POST api/recipes
         [HttpPost]
         [Authorize(Roles = "Chef")]
-        public async Task<IActionResult> Create(RecipeCreateDto dto)
+        public async Task<IActionResult> Create([FromForm] RecipeCreateDto dto)
         {
-            var chef = await _db.Users
-                .OfType<Chef>()
-                .FirstOrDefaultAsync(c => c.UserId == dto.UserId);
-
+            var chef = await _db.Users.OfType<Chef>()
+                                      .FirstOrDefaultAsync(c => c.UserId == dto.UserId);
             if (chef == null)
-                return BadRequest("Chef not found with given UserId");
-            var recipe = _mapper.Map<Recipe>(dto);
+                return BadRequest("Chef not found");
+
+            string? imagePath = null;
+
+            if (dto.Image != null)
+            {
+                var folderPath = Path.Combine("wwwroot", "recipe-images");
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                var fileName = $"{Guid.NewGuid()}_{dto.Image.FileName}";
+                var fullPath = Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
+
+                imagePath = $"recipe-images/{fileName}";
+            }
+
+            var recipe = new Recipe
+            {
+                Title = dto.Title,
+                Ingredients = dto.Ingredients,
+                Instructions = dto.Instructions,
+                UserId = dto.UserId,
+                ImageUrl = imagePath,
+                CreatedAt = DateTime.UtcNow
+            };
+
             _db.Recipes.Add(recipe);
             await _db.SaveChangesAsync();
 
-            var readDto = _mapper.Map<RecipeReadDto>(recipe);
-            return CreatedAtAction(nameof(GetById), new { id = recipe.RecipeId }, readDto);
+            var readDto = new RecipeReadDto
+            {
+                RecipeId = recipe.RecipeId,
+                Title = recipe.Title,
+                Ingredients = recipe.Ingredients,
+                Instructions = recipe.Instructions,
+                ImageUrl = recipe.ImageUrl,
+                CreatedAt = recipe.CreatedAt,
+                UserId = recipe.UserId,
+                ChefName = chef.Name
+            };
+
+            return Ok(readDto);
         }
 
         // GET api/recipes

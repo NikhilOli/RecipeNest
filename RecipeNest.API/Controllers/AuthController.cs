@@ -8,12 +8,12 @@ namespace RecipeNest.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly AppDbContext _db;
         private readonly AuthService _auth;
 
-        public LoginController(AppDbContext db, AuthService auth)
+        public AuthController(AppDbContext db, AuthService auth)
         {
             _db = db;
             _auth = auth;

@@ -25,7 +25,7 @@ namespace RecipeNest.API.Entities
         [Required]
         public string Instructions { get; set; } = string.Empty;
 
-        public string ImageUrl { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }
