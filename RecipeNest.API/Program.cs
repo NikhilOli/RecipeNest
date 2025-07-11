@@ -7,6 +7,18 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.  
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")  // your React app URL
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials(); // if using cookies/auth
+        });
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -40,6 +52,7 @@ builder.Services.AddScoped<RecipeNest.API.Services.AuthService>();
 
 
 var app = builder.Build();
+app.UseCors("AllowReactApp");
 
 // Configure the HTTP request pipeline.  
 if (app.Environment.IsDevelopment())

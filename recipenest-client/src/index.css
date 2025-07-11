@@ -1,1 +1,7 @@
 @import "tailwindcss";
+@theme {
+    --color-primary-100: #ff6b6b;
+    --color-secondary-100: #4ecdc4;
+    --color-dark-100: #171717;
+    --color-light-100: #ffffff;
+}

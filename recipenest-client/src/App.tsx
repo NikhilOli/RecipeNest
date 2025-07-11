@@ -1,11 +1,21 @@
 
-import './App.css'
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import './index.css'
+import Login from './pages/Login'
+import { Toaster } from 'react-hot-toast'
 function App() {
 
   return (
     <>
-      <h1 className='text-red-400'>Recipenest</h1>
+        <BrowserRouter>
+        <Toaster/>
+          <Routes>
+            <Route
+              path="/"
+              element={<Login />}
+            />
+          </Routes>
+        </BrowserRouter>
     </>
   )
 }
