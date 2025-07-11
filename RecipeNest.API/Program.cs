@@ -51,6 +51,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles(); // for wwwroot to serve images
 
 app.MapControllers();
 

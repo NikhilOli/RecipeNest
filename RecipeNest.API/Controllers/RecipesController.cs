@@ -35,6 +35,11 @@ namespace RecipeNest.API.Controllers
 
             if (dto.Image != null)
             {
+                var permittedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var ext = Path.GetExtension(dto.Image.FileName).ToLowerInvariant();
+                if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+                    return BadRequest("Only image files (.jpg, .jpeg, .png, .gif) are allowed.");
+
                 var folderPath = Path.Combine("wwwroot", "recipe-images");
                 if (!Directory.Exists(folderPath))
                     Directory.CreateDirectory(folderPath);
@@ -124,17 +129,24 @@ namespace RecipeNest.API.Controllers
 
         // DELETE api/recipes/{id}
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "Chef")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Chef,Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var recipe = await _db.Recipes.FindAsync(id);
             if (recipe == null) return NotFound();
 
+            if (!string.IsNullOrEmpty(recipe.ImageUrl))
+            {
+                var filePath = Path.Combine("wwwroot", recipe.ImageUrl);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
             _db.Recipes.Remove(recipe);
             await _db.SaveChangesAsync();
-
-            return NoContent();
+            return Ok("Recipe deleted successfully");
         }
     }
 }
