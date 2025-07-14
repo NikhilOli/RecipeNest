@@ -11,7 +11,11 @@ interface Recipe {
 
 interface RecentRecipesTableProps {
     recipes: Recipe[];
+    onEdit?: (id: string) => void;   
+    onDelete?: (id: string) => void;
+    showActions?: boolean;
 }
+
 
 export default function RecentRecipesTable({ recipes }: RecentRecipesTableProps) {
     if (recipes.length === 0) {
@@ -37,7 +41,13 @@ export default function RecentRecipesTable({ recipes }: RecentRecipesTableProps)
             {recipes.map(({ recipeId, title, createdAt, avgRating = 0, likes = 0 }) => (
                 <TableRow key={recipeId} className="cursor-pointer hover:bg-gray-100">
                 <TableCell className="font-medium text-[#ff6b6b]">{title}</TableCell>
-                <TableCell>{new Date(createdAt).toLocaleDateString()}</TableCell>
+                <TableCell>
+                {new Date(createdAt).toLocaleDateString("en-US", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                })}
+                </TableCell>
                 <TableCell className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-[#ffe066]" /> {typeof avgRating === "number" ? avgRating.toFixed(1) : "N/A"}
                 </TableCell>

@@ -13,8 +13,9 @@ const RecipeList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get("/recipes").then(res => setRecipes(res.data));
+    API.get("/recipes").then(res => setRecipes(res.data)); 
   }, []);
+  console.log("Fetched recipes:", recipes)
 
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(search.toLowerCase())
@@ -45,7 +46,7 @@ const RecipeList = () => {
                 >
                 <CardContent className="p-4">
                     {recipe.imageUrl && (
-                    <img src={recipe.imageUrl} alt={recipe.title} className="w-full h-32 object-cover rounded mb-2" />
+                    <img src={`https://localhost:7288/${recipe.imageUrl}`} alt={recipe.title} className="w-full h-32 object-cover rounded mb-2" />
                     )}
                     <div className="font-semibold text-lg text-[#ff6b6b]">{recipe.title}</div>
                     <div className="text-xs text-gray-400 mt-1">

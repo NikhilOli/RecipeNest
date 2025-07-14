@@ -59,7 +59,7 @@ const Navbar = () => {
             <Button
               key={link.label}
               variant="ghost"
-              className="text-white hover:text-[#ff6b6b]"
+              className="text-white hover:text-[#ff6b6b] cursor-pointer"
               onClick={() => {
                 setMobileOpen(false);
                 navigate(link.path);
@@ -71,13 +71,13 @@ const Navbar = () => {
 
           {user ? (
             <>
-              <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#4ecdc4] text-[#171717] font-semibold cursor-default select-none">
+              <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#4ecdc4] text-[#171717] font-semibold select-none cursor-pointer">
                 <UserCircle className="w-5 h-5" />
                 <span>{user.name || user.role}</span>
               </div>
               <Button
                 variant="ghost"
-                className="text-[#ff6b6b]"
+                className="text-[#ff6b6b] cursor-pointer"
                 onClick={handleLogout}
                 title="Logout"
               >

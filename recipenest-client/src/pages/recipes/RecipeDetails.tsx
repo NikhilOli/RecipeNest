@@ -21,7 +21,7 @@ const RecipeDetails = () => {
         <Card className="bg-[#1e1e1e] border-none shadow-xl">
             <CardContent className="p-8">
             <img
-                src={recipe.imageUrl || "/default-recipe.jpg"}
+                src={`https://localhost:7288/${recipe.imageUrl}` || "/default-recipe.jpg"}
                 alt={recipe.title}
                 className="w-full max-h-64 object-cover rounded-lg mb-6"
             />

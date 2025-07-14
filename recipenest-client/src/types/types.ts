@@ -25,3 +25,14 @@ export interface ProfileData {
     email: string;
     bio: string;
 }
+
+export interface Recipe {
+    recipeId: string;
+    title: string;
+    ingredients: string;
+    instructions: string;
+    createdAt: string;
+    avgRating: number;
+    likes: number;
+    imageUrl?: string;
+}

@@ -17,7 +17,7 @@ export default function SidebarNav({ active, onSelect }: { active: string; onSel
           <button
             key={label}
             onClick={() => onSelect(label)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition cursor-pointer ${
               active === label ? "bg-[#4ecdc4] text-[#171717]" : "hover:bg-[#222]"
             }`}
           >
