@@ -106,21 +106,21 @@ export default function Profile() {
             <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <Label htmlFor="name" className="flex items-center gap-2">
+                <Label htmlFor="name" className="flex items-center gap-2 mb-2">
                 <User className="w-5 h-5 text-gray-600" />
                 Name
                 </Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div>
-                <Label htmlFor="email" className="flex items-center gap-2">
+                <Label htmlFor="email" className="flex items-center gap-2 mb-2">
                 <Mail className="w-5 h-5 text-gray-600" />
                 Email
                 </Label>
                 <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="md:col-span-2">
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio" className="mb-2">Bio</Label>
                 <Textarea id="bio" rows={4} value={bio} onChange={(e) => setBio(e.target.value)} />
             </div>
             </div>

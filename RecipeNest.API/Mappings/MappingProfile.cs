@@ -11,6 +11,11 @@ namespace RecipeNest.API.Mappings
             CreateMap<ChefWriteDto, Chef>();
             CreateMap<Chef, ChefReadDto>();
 
+            CreateMap<Chef, ChefReadDto>()
+            .ForMember(dest => dest.RecipesCount, opt => opt.MapFrom(src => src.Recipes.Count))
+            .ForMember(dest => dest.Followers, opt => opt.MapFrom(src => src.Followers.Count));
+            CreateMap<ChefWriteDto, Chef>();
+
             CreateMap<FoodLoverWriteDto, FoodLover>();
             CreateMap<FoodLover, FoodLoverReadDto>();
 

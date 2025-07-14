@@ -86,6 +86,7 @@ namespace RecipeNest.API.Controllers
                 {
                     UserId = chef.UserId,
                     Name = chef.Name,
+                    Email = chef.Email,
                     Bio = chef.Bio,
                     RecipesCount = _db.Recipes.Count(r => r.UserId == chef.UserId)
                 })
@@ -152,6 +153,87 @@ namespace RecipeNest.API.Controllers
                 .ToListAsync();
 
             return Ok(_mapper.Map<IEnumerable<RecipeReadDto>>(recentRecipes));
+        }
+
+        [HttpGet("analytics/{id:guid}")]
+        [Authorize(Roles = "Chef")]
+        public async Task<IActionResult> GetChefAnalytics()
+        {
+            var userId = _auth.GetUserId(User);
+
+            // Assume each recipe gets ~1 view per like or rating for mock data
+            // In real app, track actual views if needed
+
+            var recipeIds = await _db.Recipes
+                .Where(r => r.UserId == userId)
+                .Select(r => r.RecipeId)
+                .ToListAsync();
+
+            // Likes over time
+            var likesOverTime = await _db.RecipeLikes
+                .Where(l => recipeIds.Contains(l.RecipeId))
+                .GroupBy(l => l.Recipe.CreatedAt.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    Likes = g.Count()
+                })
+                .ToListAsync();
+
+            // Followers over time
+            var followersOverTime = await _db.Follows
+                .Where(f => f.FollowingId == userId)
+                .GroupBy(f => f.FollowedAt.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    Followers = g.Count()
+                })
+                .ToListAsync();
+
+            // Simulated views over time (based on likes + ratings)
+            var ratingsOverTime = await _db.Ratings
+                .Where(r => recipeIds.Contains(r.RecipeId))
+                .GroupBy(r => r.Recipe.CreatedAt.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    Views = g.Count()
+                })
+                .ToListAsync();
+
+            // Combine likes + ratings to simulate views
+            var viewsMap = new Dictionary<string, int>();
+            foreach (var entry in likesOverTime)
+                viewsMap[entry.Date] = entry.Likes;
+            foreach (var entry in ratingsOverTime)
+                viewsMap[entry.Date] = viewsMap.ContainsKey(entry.Date) ? viewsMap[entry.Date] + entry.Views : entry.Views;
+
+            var viewsOverTime = viewsMap
+                .Select(pair => new { date = pair.Key, views = pair.Value })
+                .OrderBy(d => d.date)
+                .ToList();
+
+            // Top recipes by total "views" = likes + ratings
+            var topRecipes = await _db.Recipes
+                .Where(r => r.UserId == userId)
+                .Select(r => new
+                {
+                    r.Title,
+                    Views = _db.RecipeLikes.Count(l => l.RecipeId == r.RecipeId) +
+                            _db.Ratings.Count(rt => rt.RecipeId == r.RecipeId)
+                })
+                .OrderByDescending(r => r.Views)
+                .Take(5)
+                .ToListAsync();
+
+            return Ok(new
+            {
+                viewsOverTime,
+                likesOverTime,
+                followersOverTime,
+                topRecipes
+            });
         }
 
     }

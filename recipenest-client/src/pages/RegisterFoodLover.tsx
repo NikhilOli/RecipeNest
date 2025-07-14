@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import toast from "react-hot-toast";
+import API from "@/services/api";
 
 const RegisterFoodLover = () => {
   const [form, setForm] = useState({
@@ -21,7 +21,7 @@ const RegisterFoodLover = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/foodlovers/register", form);
+      await API.post("/foodlovers/register", form);
       toast.success("Food Lover registered successfully! Please login.");
       navigate("/login");
     } catch (err: any) {

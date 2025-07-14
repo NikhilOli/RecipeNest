@@ -1,11 +1,11 @@
 // ✅ React component: RegisterChef.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import toast from "react-hot-toast";
+import API from "@/services/api";
 
 const RegisterChef = () => {
   const [form, setForm] = useState({
@@ -23,7 +23,7 @@ const RegisterChef = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/chefs/register", form);
+      await API.post("/chefs/register", form);
       toast.success("Chef registered successfully! Please login.");
       navigate("/login");
     } catch (err: any) {

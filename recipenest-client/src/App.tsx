@@ -21,9 +21,9 @@ function App() {
 
   return (
     <>  
-      <AuthProvider>
-          <div className='min-h-screen w-full overflow-x-hidden bg-[#171717]'>     
-            <BrowserRouter>
+        <div className='min-h-screen w-full overflow-x-hidden bg-[#171717]'>     
+          <BrowserRouter>
+            <AuthProvider>
             <Toaster/>
             <Navbar />
               <Routes>
@@ -54,9 +54,9 @@ function App() {
                 {/* <Route path="/recipes/by-chef/:id" element={< />} /> */}
               </Routes>
               <Footer />
-            </BrowserRouter>
-          </div>
-        </AuthProvider>
+              </AuthProvider>
+          </BrowserRouter>
+        </div>
     </>
   )
 }

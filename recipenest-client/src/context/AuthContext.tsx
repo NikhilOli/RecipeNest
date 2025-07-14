@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
     user: { role?: string; name?: string; userId?: string } | null;
@@ -10,6 +11,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<AuthContextType["user"]>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         // On mount, load user from localStorage
@@ -25,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const logout = () => {
         localStorage.clear();
         setUser(null);
+        navigate("/")
     };
 
     return (
