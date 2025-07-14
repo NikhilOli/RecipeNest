@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import SidebarNav from "@/components/dashboard/SidebarNav";
-import Overview from "@/components/dashboard/Overview";
-import MyRecipes from "@/components/dashboard/MyRecipes";
-import Profile from "@/components/dashboard/Profile";
-import Analytics from "@/components/dashboard/Analytics";
-import Settings from "@/components/dashboard/Settings";
+import SidebarNav from "@/components/chef-dashboard/SidebarNav";
+import Overview from "@/components/chef-dashboard/Overview";
+import MyRecipes from "@/components/chef-dashboard/MyRecipes";
+import Profile from "@/components/chef-dashboard/Profile";
+import Analytics from "@/components/chef-dashboard/Analytics";
+import Settings from "@/components/chef-dashboard/Settings";
 
 export default function ChefDashboard() {
     const [activeMenu, setActiveMenu] = useState("Overview");

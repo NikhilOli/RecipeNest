@@ -16,5 +16,8 @@
         public string Bio { get; set; } = string.Empty;
         public int RecipesCount { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int TotalLikes { get; set; }
+        public int Followers { get; set; }
+        public double AvgRating { get; set; }
     }
 }

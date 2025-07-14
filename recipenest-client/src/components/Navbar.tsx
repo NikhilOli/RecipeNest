@@ -87,13 +87,13 @@ const Navbar = () => {
           ) : (
             <>
               <Button
-                className="bg-[#4ecdc4] text-black font-semibold hover:bg-[#3bbdb4]"
+                className="bg-[#4ecdc4] text-black font-semibold hover:bg-[#3bbdb4] cursor-pointer"
                 onClick={() => navigate("/login")}
               >
                 Login
               </Button>
               <Button
-                className="bg-[#ff6b6b] text-white font-semibold hover:bg-[#e55d5d]"
+                className="bg-[#ff6b6b] text-white font-semibold hover:bg-[#e55d5d] cursor-pointer"
                 onClick={() => navigate("/register")}
               >
                 Register

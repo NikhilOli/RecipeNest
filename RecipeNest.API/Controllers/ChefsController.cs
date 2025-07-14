@@ -49,20 +49,30 @@ namespace RecipeNest.API.Controllers
         public async Task<ActionResult<ChefReadDto>> GetById(Guid id)
         {
             var chef = await _db.Users.OfType<Chef>()
+                .Include(c => c.Recipes)
                 .FirstOrDefaultAsync(c => c.UserId == id);
 
-            if (chef is null)
-                return NotFound();
+            if (chef is null) return NotFound();
 
-            // Manually build the DTO to include recipe count
-            var recipeCount = await _db.Recipes.CountAsync(r => r.UserId == chef.UserId);
+            var recipeIds = chef.Recipes.Select(r => r.RecipeId).ToList();
+
+            var likesCount = await _db.RecipeLikes.CountAsync(l => recipeIds.Contains(l.RecipeId));
+            var followersCount = await _db.Follows.CountAsync(f => f.FollowingId == chef.UserId);
+            var avgRating = await _db.Ratings
+                .Where(r => recipeIds.Contains(r.RecipeId))
+                .AverageAsync(r => (double?)r.Stars) ?? 0;
 
             var dto = new ChefReadDto
             {
                 UserId = chef.UserId,
                 Name = chef.Name,
+                Email = chef.Email,
                 Bio = chef.Bio,
-                RecipesCount = recipeCount
+                RecipesCount = chef.Recipes.Count,
+                CreatedAt = chef.CreatedAt,
+                Followers = followersCount,
+                TotalLikes = likesCount,
+                AvgRating = Math.Round(avgRating, 1)
             };
 
             return Ok(dto);
@@ -82,6 +92,29 @@ namespace RecipeNest.API.Controllers
                 .ToListAsync();
 
             return chefs;
+        }
+        // PUT api/chefs/{id}
+        [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Chef")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] ChefWriteDto dto)
+        {
+            var userId = _auth.GetUserId(User);
+
+            if (userId != id)
+                return Forbid("You can only update your own profile");
+
+            var chef = await _db.Users.OfType<Chef>().FirstOrDefaultAsync(c => c.UserId == id);
+            if (chef == null)
+                return NotFound("Chef not found");
+
+            // Update fields (you can use AutoMapper if preferred)
+            chef.Name = dto.Name;
+            chef.Email = dto.Email;
+            chef.Bio = dto.Bio ?? chef.Bio;
+
+            await _db.SaveChangesAsync();
+
+            return NoContent(); // or return Ok if you prefer a message
         }
 
         [HttpGet("stats")]
