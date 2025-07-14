@@ -1,38 +1,51 @@
-import { Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Star } from "lucide-react";
 
-export default function RecentRecipesTable({ recipes, onEdit, onDelete }: any) {
+interface Recipe {
+    recipeId: string;
+    title: string;
+    createdAt: string;
+    avgRating: number;
+    likes: number;
+}
+
+interface RecentRecipesTableProps {
+    recipes: Recipe[];
+}
+
+export default function RecentRecipesTable({ recipes }: RecentRecipesTableProps) {
+    if (recipes.length === 0) {
+        return <p className="text-gray-500 text-center">No recent recipes available.</p>;
+    }
+
     return (
-        <div className="bg-white rounded-xl shadow p-6 mt-6">
+        <div className="bg-white rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-[#171717]">Recent Recipes</h3>
-            <span className="text-[#4ecdc4] cursor-pointer text-sm font-semibold">View All</span>
+            {/* You can add "View All" link here if needed */}
         </div>
-        <table className="w-full text-[#171717]">
-            <thead>
-            <tr className="text-left text-gray-500 text-sm">
-                <th>Recipe Name</th>
-                <th>Date Added</th>
-                <th>Views</th>
-                <th>Likes</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {recipes.map((r: any) => (
-                <tr key={r.recipeId} className="border-t">
-                <td>{r.title}</td>
-                <td>{new Date(r.createdAt).toLocaleDateString()}</td>
-                <td>{r.views}</td>
-                <td>{r.likes}</td>
-                <td>
-                    <Button variant="ghost" onClick={() => onEdit(r.recipeId)}><Pencil className="w-4 h-4 text-[#4ecdc4]" /></Button>
-                    <Button variant="ghost" onClick={() => onDelete(r.recipeId)}><Trash2 className="w-4 h-4 text-[#ff6b6b]" /></Button>
-                </td>
-                </tr>
+        <Table>
+            <TableHeader>
+            <TableRow>
+                <TableHead>Recipe Name</TableHead>
+                <TableHead>Date Added</TableHead>
+                <TableHead>Avg Rating</TableHead>
+                <TableHead>Likes</TableHead>
+            </TableRow>
+            </TableHeader>
+            <TableBody>
+            {recipes.map(({ recipeId, title, createdAt, avgRating = 0, likes = 0 }) => (
+                <TableRow key={recipeId} className="cursor-pointer hover:bg-gray-100">
+                <TableCell className="font-medium text-[#ff6b6b]">{title}</TableCell>
+                <TableCell>{new Date(createdAt).toLocaleDateString()}</TableCell>
+                <TableCell className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-[#ffe066]" /> {typeof avgRating === "number" ? avgRating.toFixed(1) : "N/A"}
+                </TableCell>
+                <TableCell>{likes}</TableCell>
+                </TableRow>
             ))}
-            </tbody>
-        </table>
+            </TableBody>
+        </Table>
         </div>
     );
 }

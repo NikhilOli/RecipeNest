@@ -46,5 +46,12 @@ namespace RecipeNest.API.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public Guid GetUserId(ClaimsPrincipal user)
+        {
+            var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Guid.TryParse(userId, out var guid)
+                ? guid
+                : throw new UnauthorizedAccessException("Invalid or missing user ID claim");
+        }
     }
 }

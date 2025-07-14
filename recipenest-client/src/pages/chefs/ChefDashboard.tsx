@@ -5,17 +5,16 @@ import MyRecipes from "@/components/dashboard/MyRecipes";
 import Profile from "@/components/dashboard/Profile";
 import Analytics from "@/components/dashboard/Analytics";
 import Settings from "@/components/dashboard/Settings";
-import API from "@/services/api";
 
 export default function ChefDashboard() {
     const [activeMenu, setActiveMenu] = useState("Overview");
     const [chefName, setChefName] = useState("Chef");
 
     useEffect(() => {
-        // Fetch chef profile info to get name
-        API.get("/chef/profile").then(res => {
-            setChefName(res.data.name || "Chef");
-        });
+    const storedName = localStorage.getItem("name");
+    if (storedName) {
+        setChefName(storedName);
+    }
     }, []);
 
     const renderContent = () => {

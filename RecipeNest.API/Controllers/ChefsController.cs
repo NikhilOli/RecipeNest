@@ -83,5 +83,43 @@ namespace RecipeNest.API.Controllers
 
             return chefs;
         }
+
+        [HttpGet("stats")]
+        [Authorize(Roles = "Chef")]
+        public async Task<ActionResult<object>> GetStats()
+        {
+            var userId = _auth.GetUserId(User); // make sure AuthService has this
+            var totalRecipes = await _db.Recipes.CountAsync(r => r.UserId == userId);
+            var totalLikes = await _db.RecipeLikes
+                .Where(l => l.Recipe.UserId == userId)
+                .CountAsync();
+            var avgRating = await _db.Ratings
+                .Where(r => r.Recipe.UserId == userId)
+                .AverageAsync(r => (double?)r.Stars) ?? 0;
+            var followers = await _db.Follows.CountAsync(f => f.FollowingId == userId);
+
+            return Ok(new
+            {
+                totalRecipes,
+                totalLikes,
+                avgRating,
+                followers
+            });
+        }
+
+        [HttpGet("recent-recipes")]
+        [Authorize(Roles = "Chef")]
+        public async Task<ActionResult<IEnumerable<RecipeReadDto>>> GetRecentRecipes()
+        {
+            var userId = _auth.GetUserId(User);
+            var recentRecipes = await _db.Recipes
+                .Where(r => r.UserId == userId)
+                .OrderByDescending(r => r.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
+            return Ok(_mapper.Map<IEnumerable<RecipeReadDto>>(recentRecipes));
+        }
+
     }
 }

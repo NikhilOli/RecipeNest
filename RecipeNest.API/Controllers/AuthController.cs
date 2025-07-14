@@ -27,7 +27,7 @@ namespace RecipeNest.API.Controllers
                 return Unauthorized("Invalid credentials");
 
             var token = _auth.CreateToken(user);
-            return Ok(new { Token = token, user.Role, user.UserId });
+            return Ok(new { Token = token, user.Role, user.UserId, user.Name });
         }
     }
 }
