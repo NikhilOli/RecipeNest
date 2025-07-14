@@ -48,15 +48,40 @@ namespace RecipeNest.API.Controllers
         [Authorize(Roles = "Chef")]
         public async Task<ActionResult<ChefReadDto>> GetById(Guid id)
         {
-            var chef = await _db.Users.OfType<Chef>().FirstOrDefaultAsync(c => c.UserId == id);
-            return chef is null ? NotFound() : Ok(_mapper.Map<ChefReadDto>(chef));
+            var chef = await _db.Users.OfType<Chef>()
+                .FirstOrDefaultAsync(c => c.UserId == id);
+
+            if (chef is null)
+                return NotFound();
+
+            // Manually build the DTO to include recipe count
+            var recipeCount = await _db.Recipes.CountAsync(r => r.UserId == chef.UserId);
+
+            var dto = new ChefReadDto
+            {
+                UserId = chef.UserId,
+                Name = chef.Name,
+                Bio = chef.Bio,
+                RecipesCount = recipeCount
+            };
+
+            return Ok(dto);
         }
 
         // GET api/chefs
-        [HttpGet]
-        public async Task<IEnumerable<ChefReadDto>> GetAll() =>
-            await _db.Users.OfType<Chef>()
-                .Select(f => _mapper.Map<ChefReadDto>(f))
+        public async Task<IEnumerable<ChefReadDto>> GetAll()
+        {
+            var chefs = await _db.Users.OfType<Chef>()
+                .Select(chef => new ChefReadDto
+                {
+                    UserId = chef.UserId,
+                    Name = chef.Name,
+                    Bio = chef.Bio,
+                    RecipesCount = _db.Recipes.Count(r => r.UserId == chef.UserId)
+                })
                 .ToListAsync();
+
+            return chefs;
+        }
     }
 }

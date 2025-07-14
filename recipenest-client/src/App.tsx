@@ -9,6 +9,10 @@ import RegisterFoodLover from './pages/RegisterFoodLover'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import LandingPage from './pages/LandingPage'
+import ChefsList from './pages/chefs/ChefList'
+import ChefDetails from './pages/chefs/ChefDetails'
+import RecipeList from './pages/recipes/RecipeList'
+import RecipeDetails from './pages/recipes/RecipeDetails'
 function App() {
 
   return (
@@ -29,6 +33,11 @@ function App() {
             <Route path="/register" element={<RegisterRole />} />
             <Route path="/register-chef" element={<RegisterChef />} />
             <Route path="/register-foodlover" element={<RegisterFoodLover />} />
+            <Route path="/chefs" element={<ChefsList />} />
+            <Route path="/chefs/:id" element={<ChefDetails />} />
+            <Route path="/recipes" element={<RecipeList />} />
+            <Route path="/recipes/:id" element={<RecipeDetails />} />
+            {/* <Route path="/recipes/by-chef/:id" element={< />} /> */}
           </Routes>
           <Footer />
         </BrowserRouter>
