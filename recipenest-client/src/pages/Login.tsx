@@ -6,12 +6,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Lock } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useAuth();
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,8 +24,10 @@ const Login = () => {
       localStorage.setItem("role", res.role);
       localStorage.setItem("userId", res.userId);
 
-      if (res.role === "Chef") navigate("/dashboard");
-      else if (res.role === "FoodLover") navigate("/chefs");
+      setUser({ role: res.role, name: res.name, userId: res.userId });
+
+      if (res.role === "Chef") navigate("/chef/dashboard");
+      else if (res.role === "FoodLover") navigate("/");
       else if (res.role === "Admin") navigate("/admin");
       toast.success("Login successful!");
     } catch (err) {
