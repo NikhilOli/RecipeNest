@@ -13,6 +13,7 @@ import ChefsList from './pages/chefs/ChefList'
 import ChefDetails from './pages/chefs/ChefDetails'
 import RecipeList from './pages/recipes/RecipeList'
 import RecipeDetails from './pages/recipes/RecipeDetails'
+import ChefDashboard from './pages/chefs/ChefDashboard'
 function App() {
 
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="/chefs/:id" element={<ChefDetails />} />
             <Route path="/recipes" element={<RecipeList />} />
             <Route path="/recipes/:id" element={<RecipeDetails />} />
+            <Route path="/chef/dashboard" element={<ChefDashboard />} />
             {/* <Route path="/recipes/by-chef/:id" element={< />} /> */}
           </Routes>
           <Footer />

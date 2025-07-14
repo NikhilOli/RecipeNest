@@ -3,17 +3,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChefHat, Heart, Star } from "lucide-react";
 import API from "@/services/api";
-
-export interface RecipeDetailProps {
-    userId: string;
-    recipeId: string;
-    title: string;
-    chefName: string;
-    ingredients: string;
-    instructions: string;
-    imageUrl?: string;
-    createdAt?: string;
-}
+import type { RecipeDetailProps } from "@/types/types";
 
 const RecipeDetails = () => {
     const { id } = useParams();

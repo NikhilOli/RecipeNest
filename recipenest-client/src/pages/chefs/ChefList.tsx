@@ -4,14 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ChefHat, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import API from "@/services/api";
-export interface ChefProps {
-    userId: string;
-    name: string;
-    bio: string;
-    email?: string;
-    recipesCount?: number;
-    createdAt?: string;
-}
+import type { ChefProps } from "@/types/types";
 
 const ChefsList = () => {
   const [chefs, setChefs] = useState([]);

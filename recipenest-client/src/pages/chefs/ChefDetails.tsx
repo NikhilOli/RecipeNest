@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChefHat, BookOpen, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { RecipeDetailProps } from "../recipes/RecipeDetails";
 import API from "@/services/api";
+import type { RecipeDetailProps } from "@/types/types";
 
 interface ChefProps {
     userId: string;
