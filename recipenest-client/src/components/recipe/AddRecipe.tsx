@@ -70,7 +70,7 @@ export default function AddRecipe() {
             <h2 className="text-2xl font-bold mb-6 text-[#171717]">Add New Recipe</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-                <Label htmlFor="title">Title *</Label>
+                <Label className="mb-2" htmlFor="title">Title *</Label>
                 <Input
                 id="title"
                 type="text"
@@ -82,7 +82,7 @@ export default function AddRecipe() {
             </div>
 
             <div>
-                <Label htmlFor="ingredients">Ingredients *</Label>
+                <Label className="mb-2" htmlFor="ingredients">Ingredients *</Label>
                 <Textarea
                 id="ingredients"
                 value={ingredients}
@@ -94,7 +94,7 @@ export default function AddRecipe() {
             </div>
 
             <div>
-                <Label htmlFor="instructions">Instructions *</Label>
+                <Label className="mb-2" htmlFor="instructions">Instructions *</Label>
                 <Textarea
                 id="instructions"
                 value={instructions}
@@ -106,7 +106,7 @@ export default function AddRecipe() {
             </div>
 
             <div>
-                <Label htmlFor="image">Recipe Image (optional)</Label>
+                <Label className="mb-2" htmlFor="image">Recipe Image (optional)</Label>
                 <Input
                 id="image"
                 type="file"

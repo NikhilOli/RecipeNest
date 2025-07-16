@@ -134,6 +134,36 @@ namespace RecipeNest.API.Controllers
             await _db.SaveChangesAsync();
             return Ok("Rating updated");
         }
+        [HttpGet("likes/by-user/{userId:guid}")]
+        public async Task<IActionResult> GetLikedRecipesByUser(Guid userId)
+        {
+            var likes = await _db.RecipeLikes
+               .Include(l => l.Recipe)
+                   .ThenInclude(r => r.Chef)
+               .Where(l => l.UserId == userId)
+               .Select(l => new {
+                   l.Recipe.RecipeId,
+                   l.Recipe.Title,
+                   l.Recipe.ImageUrl,
+                   ChefName = l.Recipe.Chef.Name
+               }).ToListAsync();
 
+            return Ok(likes);
+        }
+
+        [HttpGet("ratings/by-user/{userId:guid}")]
+        public async Task<IActionResult> GetRatingsByUser(Guid userId)
+        {
+            var ratings = await _db.Ratings
+                .Where(r => r.UserId == userId)
+                .Select(r => new {
+                    r.Recipe.RecipeId,
+                    r.Recipe.Title,
+                    r.Stars,
+                    r.Comment
+                }).ToListAsync();
+
+            return Ok(ratings);
+        }
     }
 }

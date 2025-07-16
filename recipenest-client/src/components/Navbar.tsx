@@ -22,26 +22,27 @@ const Navbar = () => {
 
   const chefLinks = [
     { label: "Dashboard", path: "/chef/dashboard" },
-    { label: "My Recipes", path: "/chef/recipes" },
+    // { label: "My Recipes", path: "/chef/recipes" },
   ];
 
   const foodLoverLinks = [
     { label: "Chefs", path: "/chefs" },
     { label: "Recipes", path: "/recipes" },
-  ];
-
-  const commonLoggedInLinks = [
     { label: "Profile", path: "/profile" },
   ];
+
+  // const commonLoggedInLinks = [
+  //   { label: "Profile", path: "/profile" },
+  // ];
 
   // Build links based on user role
   let links = guestLinks;
   if (user?.role === "Chef") {
-    links = [...chefLinks, ...commonLoggedInLinks];
+    links = [...chefLinks, ];
   } else if (user?.role === "FoodLover") {
-    links = [...foodLoverLinks, ...commonLoggedInLinks];
+    links = [...foodLoverLinks, ];
   } else if (user?.role === "Admin") {
-    links = [{ label: "Admin Panel", path: "/admin" }, ...commonLoggedInLinks];
+    links = [{ label: "Admin Panel", path: "/admin" }, ];
   }
   
 

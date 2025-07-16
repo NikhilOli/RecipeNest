@@ -15,8 +15,6 @@ const RecipeList = () => {
   useEffect(() => {
     API.get("/recipes").then(res => setRecipes(res.data)); 
   }, []);
-  console.log("Fetched recipes:", recipes)
-
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(search.toLowerCase())
   );

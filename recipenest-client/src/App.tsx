@@ -17,6 +17,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import ChefDashboard from './pages/chefs/ChefDashboard'
 import { AuthProvider } from './context/AuthContext'
 import AddRecipe from './components/recipe/AddRecipe'
+import FoodLoverProfile from './pages/foodLovers/FoodLoverProfile'
 function App() {
 
   return (
@@ -51,6 +52,8 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route path="/profile" element={<FoodLoverProfile />} />
+                {/* <Route path="/profile" element={<Profile />} /> */}
                 {/* <Route path="/recipes/by-chef/:id" element={< />} /> */}
               </Routes>
               <Footer />
