@@ -29,7 +29,7 @@ namespace RecipeNest.API.Mappings
             CreateMap<RatingCreateDto, Rating>();
             CreateMap<Rating, RatingReadDto>();
 
-
+            CreateMap<User, UserDto>();
         }
     }
 }

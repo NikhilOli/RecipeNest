@@ -8,6 +8,7 @@
         public string Role { get; set; } = "";
         public string? Bio { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? LastLogin { get; set; }
 
         // Chef-specific
         public int? FollowersCount { get; set; }

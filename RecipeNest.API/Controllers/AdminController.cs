@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace RecipeNest.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
-        public AdminController(AppDbContext db)
+        public AdminController(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         private bool IsAdmin(User user) => user.Role == "Admin";
@@ -34,6 +37,7 @@ namespace RecipeNest.API.Controllers
                     Role = c.Role,
                     Bio = c.Bio,
                     CreatedAt = c.CreatedAt,
+                    LastLogin = c.LastLogin,
                     FollowersCount = c.Followers.Count(),
                     RecipesCount = c.Recipes.Count(),
                     AvgRating = c.Recipes.SelectMany(r => r.Ratings).Average(r => (double?)r.Stars) ?? 0
@@ -48,6 +52,7 @@ namespace RecipeNest.API.Controllers
                     Email = f.Email,
                     Role = f.Role,
                     CreatedAt = f.CreatedAt,
+                    LastLogin = f.LastLogin,
                     LikedRecipesCount = f.LikedRecipes.Count(),
                     CommentsCount = _db.Ratings.Count(r => r.UserId == f.UserId && r.Comment != null),
                     FollowedChefsCount = f.Following.Count()
@@ -61,72 +66,49 @@ namespace RecipeNest.API.Controllers
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            // Try find user role first
             var user = await _db.Users.FindAsync(id);
             if (user == null) return NotFound();
 
-            if (user.Role == "Chef")
+            var dto = user.Role switch
             {
-                var chef = await _db.Chefs
+                "Chef" => await _db.Chefs
                     .Where(c => c.UserId == id)
-                    .Select(c => new
+                    .Select(c => new UserDto
                     {
-                        c.UserId,
-                        c.Name,
-                        c.Email,
-                        c.Role,
-                        c.Bio,
-                        c.CreatedAt,
-                        LastLogin = (DateTime?)null, // Add this if you track last login, else null
-                        RecipesCount = c.Recipes.Count(),
-                        FollowersCount = c.Followers.Count(),
-                        AvgRating = c.Recipes.SelectMany(r => r.Ratings).Average(r => (double?)r.Stars) ?? 0.0
+                        UserId = c.UserId,
+                        Name = c.Name,
+                        Email = c.Email,
+                        Role = c.Role,
+                        Bio = c.Bio,
+                        CreatedAt = c.CreatedAt,
+                        LastLogin = c.LastLogin,
+                        RecipesCount = c.Recipes.Count,
+                        FollowersCount = c.Followers.Count,
+                        AvgRating = c.Recipes.SelectMany(r => r.Ratings).Average(r => (double?)r.Stars) ?? 0
                     })
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(),
 
-                if (chef == null) return NotFound();
-
-                return Ok(chef);
-            }
-            else if (user.Role == "FoodLover")
-            {
-                var foodLover = await _db.FoodLovers
+                "FoodLover" => await _db.FoodLovers
                     .Where(f => f.UserId == id)
-                    .Select(f => new
+                    .Select(f => new UserDto
                     {
-                        f.UserId,
-                        f.Name,
-                        f.Email,
-                        f.Role,
-                        Bio = (string?)null,
-                        f.CreatedAt,
-                        LastLogin = (DateTime?)null,
-                        LikedRecipesCount = f.LikedRecipes.Count(),
+                        UserId = f.UserId,
+                        Name = f.Name,
+                        Email = f.Email,
+                        Role = f.Role,
+                        CreatedAt = f.CreatedAt,
+                        LastLogin = f.LastLogin,
+                        Bio = null,
+                        LikedRecipesCount = f.LikedRecipes.Count,
                         CommentsCount = _db.Ratings.Count(r => r.UserId == id && r.Comment != null),
-                        FollowedChefsCount = f.Following.Count()
+                        FollowedChefsCount = f.Following.Count
                     })
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(),
 
-                if (foodLover == null) return NotFound();
+                _ => _mapper.Map<UserDto>(user) // fallback
+            };
 
-                return Ok(foodLover);
-            }
-            else
-            {
-                // Fallback for any other roles or users without role
-                var simpleUser = new
-                {
-                    user.UserId,
-                    user.Name,
-                    user.Email,
-                    user.Role,
-                    Bio = (string?)null,
-                    user.CreatedAt,
-                    LastLogin = (DateTime?)null
-                };
-
-                return Ok(simpleUser);
-            }
+            return dto == null ? NotFound() : Ok(dto);
         }
         // DELETE USER
         [HttpDelete("users/{id:guid}")]

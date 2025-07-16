@@ -23,6 +23,7 @@ import Users from './pages/admin/Users'
 import AdminLayout from './components/admin/AdminLayout'
 import Recipes from './pages/admin/Recipes'
 import UserDetails from './pages/admin/UserDetails'
+import Analytics from './pages/admin/Analytics'
 function App() {
 
   return (
@@ -71,6 +72,7 @@ function App() {
                   <Route path="users" element={<Users />} />
                   <Route path="recipes" element={<Recipes />} />
                   <Route path="/admin/users/:id" element={<UserDetails />} />
+                  <Route path="/admin/analytics" element={<Analytics />} />
                   {/* other admin routes */}
                 </Route>
               </Routes>

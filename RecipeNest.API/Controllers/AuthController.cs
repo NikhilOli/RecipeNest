@@ -44,8 +44,11 @@ namespace RecipeNest.API.Controllers
             if (user == null || !_auth.VerifyPassword(user, dto.Password))
                 return Unauthorized("Invalid credentials");
 
+            user.LastLogin = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+
             var tokenUser = _auth.CreateToken(user);
-            return Ok(new { Token = tokenUser, user.Role, user.UserId, user.Name });
+            return Ok(new { Token = tokenUser, user.Role, user.UserId, user.Name, user.LastLogin });
         }
 
         [HttpPut("change-password")]

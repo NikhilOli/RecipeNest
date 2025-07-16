@@ -45,25 +45,6 @@ const {user} = useAuth();
       .finally(() => setLoading(false));
   };
 
-  // const openConfirm = (user: User) => {
-  //   setSelectedUser(user);
-  //   setConfirmOpen(true);
-  // };
-
-  // const handleDelete = () => {
-  //   if (!selectedUser) return;
-  //   API.delete(`/admin/users/${selectedUser.userId}`)
-  //     .then(() => {
-  //       toast.success("User deleted successfully");
-  //       setUsers(users.filter((u) => u.userId !== selectedUser.userId));
-  //     })
-  //     .catch(() => toast.error("Failed to delete user"))
-  //     .finally(() => {
-  //       setConfirmOpen(false);
-  //       setSelectedUser(null);
-  //     });
-  // };
-
   const filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(search.toLowerCase()) ||

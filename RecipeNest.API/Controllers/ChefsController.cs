@@ -272,6 +272,5 @@ namespace RecipeNest.API.Controllers
                 topRecipes
             });
         }
-
     }
 }
