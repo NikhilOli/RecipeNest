@@ -35,8 +35,9 @@ const RegisterFoodLover = () => {
         <CardContent className="space-y-6 p-6">
           <h2 className="text-2xl font-bold text-center text-[#ff6b6b]">Register as Food Lover</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 text-white">
             <Input
+              className="my-6"
               name="name"
               value={form.name}
               onChange={handleChange}
@@ -45,6 +46,7 @@ const RegisterFoodLover = () => {
             />
 
             <Input
+              className="my-6"
               name="email"
               type="email"
               value={form.email}
@@ -54,6 +56,7 @@ const RegisterFoodLover = () => {
             />
 
             <Input
+              className="my-6"
               name="password"
               type="password"
               value={form.password}

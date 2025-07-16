@@ -64,7 +64,7 @@ const RecipeList = () => {
                     <div className="mt-2 text-gray-400 line-clamp-2">{recipe.ingredients}</div>
                     <Button
                     size="sm"
-                    className="bg-[#4ecdc4] text-black mt-3 hover:bg-[#3bbdb4]"
+                    className="bg-[#4ecdc4] text-black mt-3 hover:bg-[#3bbdb4] cursor-pointer"
                     onClick={e => {
                         e.stopPropagation();
                         navigate(`/recipes/${recipe.recipeId}`);

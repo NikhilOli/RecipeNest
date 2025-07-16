@@ -45,7 +45,6 @@ namespace RecipeNest.API.Controllers
 
         // GET api/chefs/{id}
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Chef")]
         public async Task<ActionResult<ChefReadDto>> GetById(Guid id)
         {
             var chef = await _db.Users.OfType<Chef>()
@@ -79,21 +78,41 @@ namespace RecipeNest.API.Controllers
         }
 
         // GET api/chefs
-        public async Task<IEnumerable<ChefReadDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<ChefReadDto>>> GetAll()
         {
             var chefs = await _db.Users.OfType<Chef>()
-                .Select(chef => new ChefReadDto
+                .Include(c => c.Recipes)
+                .ToListAsync();
+
+            var chefDtos = new List<ChefReadDto>();
+
+            foreach (var chef in chefs)
+            {
+                var recipeIds = chef.Recipes.Select(r => r.RecipeId).ToList();
+
+                var likesCount = await _db.RecipeLikes.CountAsync(l => recipeIds.Contains(l.RecipeId));
+                var followersCount = await _db.Follows.CountAsync(f => f.FollowingId == chef.UserId);
+                var avgRating = await _db.Ratings
+                    .Where(r => recipeIds.Contains(r.RecipeId))
+                    .AverageAsync(r => (double?)r.Stars) ?? 0;
+
+                chefDtos.Add(new ChefReadDto
                 {
                     UserId = chef.UserId,
                     Name = chef.Name,
                     Email = chef.Email,
                     Bio = chef.Bio,
-                    RecipesCount = _db.Recipes.Count(r => r.UserId == chef.UserId)
-                })
-                .ToListAsync();
+                    CreatedAt = chef.CreatedAt,
+                    RecipesCount = chef.Recipes.Count,
+                    AvgRating = Math.Round(avgRating, 1),
+                    TotalLikes = likesCount,
+                    Followers = followersCount
+                });
+            }
 
-            return chefs;
+            return Ok(chefDtos);
         }
+
         // PUT api/chefs/{id}
         [HttpPut("{id:guid}")]
         [Authorize(Roles = "Chef")]

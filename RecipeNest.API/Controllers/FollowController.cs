@@ -49,7 +49,7 @@ namespace RecipeNest.API.Controllers
 
         // GET: api/follow/followers/{chefId}
         [HttpGet("followers/{chefId:guid}")]
-        [Authorize(Roles = "Chef")]
+        //[Authorize(Roles = "Chef")]
         public async Task<IActionResult> GetFollowers(Guid chefId)
         {
             var followers = await _db.Follows
@@ -68,7 +68,7 @@ namespace RecipeNest.API.Controllers
 
         // GET: api/follow/following/{foodLoverId}
         [HttpGet("following/{foodLoverId:guid}")]
-        [Authorize(Roles = "FoodLover")]
+        //[Authorize(Roles = "FoodLover")]
         public async Task<IActionResult> GetFollowing(Guid foodLoverId)
         {
             var following = await _db.Follows

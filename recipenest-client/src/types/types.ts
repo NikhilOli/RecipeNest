@@ -18,6 +18,9 @@ export interface ChefProps {
     email?: string;
     recipesCount?: number;
     createdAt?: string;
+    followers?: number;
+    avgRating?: number;
+    totalLikes?: number;
 }
 
 export interface ProfileData {
@@ -35,4 +38,11 @@ export interface Recipe {
     avgRating: number;
     likes: number;
     imageUrl?: string;
+}
+
+export interface RatingInfo {
+    ratingId: string;
+    userId: string;
+    stars: number;
+    comment?: string;
 }

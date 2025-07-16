@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import API from "@/services/api";
 import { useAuth } from "@/context/AuthContext";
-import RecipeCard from "../recipe/RecipeCaard";
+import RecipeCard from "../recipe/RecipeCard";
 import ConfirmDialog from "../ConfirmDialog";
 import EditRecipeModal from "../recipe/EditRecipeModal";
 import type { Recipe } from "@/types/types";
