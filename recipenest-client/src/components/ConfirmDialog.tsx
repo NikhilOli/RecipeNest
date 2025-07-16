@@ -23,7 +23,7 @@ export default function ConfirmDialog({
         <Dialog.Title className="text-lg font-semibold">{title}</Dialog.Title>
         <Dialog.Description className="mt-2 text-gray-700">{description}</Dialog.Description>
         <div className="mt-6 flex justify-end gap-4">
-          <Button className="cursor-pointer" variant="outline" onClick={onCancel}>
+          <Button className="cursor-pointer text-black" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button className="cursor-pointer" variant="destructive" onClick={onConfirm}>

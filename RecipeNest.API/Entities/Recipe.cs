@@ -28,5 +28,6 @@ namespace RecipeNest.API.Entities
         public string? ImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     }
 }

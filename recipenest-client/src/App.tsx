@@ -18,6 +18,11 @@ import ChefDashboard from './pages/chefs/ChefDashboard'
 import { AuthProvider } from './context/AuthContext'
 import AddRecipe from './components/recipe/AddRecipe'
 import FoodLoverProfile from './pages/foodLovers/FoodLoverProfile'
+import AdminDashboard from './pages/admin/AdminDashbard'
+import Users from './pages/admin/Users'
+import AdminLayout from './components/admin/AdminLayout'
+import Recipes from './pages/admin/Recipes'
+import UserDetails from './pages/admin/UserDetails'
 function App() {
 
   return (
@@ -53,8 +58,21 @@ function App() {
                   }
                 />
                 <Route path="/profile" element={<FoodLoverProfile />} />
-                {/* <Route path="/profile" element={<Profile />} /> */}
-                {/* <Route path="/recipes/by-chef/:id" element={< />} /> */}
+
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute allowedRoles={['Admin']}>
+                      <AdminLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="users" element={<Users />} />
+                  <Route path="recipes" element={<Recipes />} />
+                  <Route path="/admin/users/:id" element={<UserDetails />} />
+                  {/* other admin routes */}
+                </Route>
               </Routes>
               <Footer />
               </AuthProvider>

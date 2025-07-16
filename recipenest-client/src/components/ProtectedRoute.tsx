@@ -10,7 +10,6 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     const role = localStorage.getItem("role");
 
     if (!token || !role || !allowedRoles.includes(role)) {
-        // Redirect to login or unauthorized page
         return <Navigate to="/login" replace />;
     }
 

@@ -139,39 +139,57 @@ namespace RecipeNest.API.Controllers
 
         [HttpGet("stats")]
         [Authorize(Roles = "Chef")]
-        public async Task<ActionResult<object>> GetStats()
+        public async Task<IActionResult> GetChefStats()
         {
-            var userId = _auth.GetUserId(User); // make sure AuthService has this
-            var totalRecipes = await _db.Recipes.CountAsync(r => r.UserId == userId);
+            var chefId = _auth.GetUserId(User);
+
+            var recipes = await _db.Recipes
+                .Where(r => r.UserId == chefId)
+                .ToListAsync();
+
+            var recipeIds = recipes.Select(r => r.RecipeId).ToList();
+
             var totalLikes = await _db.RecipeLikes
-                .Where(l => l.Recipe.UserId == userId)
-                .CountAsync();
+                .CountAsync(l => recipeIds.Contains(l.RecipeId));
+
             var avgRating = await _db.Ratings
-                .Where(r => r.Recipe.UserId == userId)
+                .Where(r => recipeIds.Contains(r.RecipeId))
                 .AverageAsync(r => (double?)r.Stars) ?? 0;
-            var followers = await _db.Follows.CountAsync(f => f.FollowingId == userId);
+
+            var followers = await _db.Follows
+                .CountAsync(f => f.FollowingId == chefId);
 
             return Ok(new
             {
-                totalRecipes,
-                totalLikes,
-                avgRating,
-                followers
+                TotalRecipes = recipes.Count,
+                TotalLikes = totalLikes,
+                AvgRating = avgRating,
+                Followers = followers
             });
         }
 
         [HttpGet("recent-recipes")]
         [Authorize(Roles = "Chef")]
-        public async Task<ActionResult<IEnumerable<RecipeReadDto>>> GetRecentRecipes()
+        public async Task<IActionResult> GetRecentRecipes()
         {
-            var userId = _auth.GetUserId(User);
-            var recentRecipes = await _db.Recipes
+            var userId = _auth.GetUserId(User); // Assuming you have this helper
+            var recipes = await _db.Recipes
                 .Where(r => r.UserId == userId)
                 .OrderByDescending(r => r.CreatedAt)
                 .Take(5)
+                .Select(r => new
+                {
+                    r.RecipeId,
+                    r.Title,
+                    r.CreatedAt,
+                    AvgRating = _db.Ratings
+                        .Where(rt => rt.RecipeId == r.RecipeId)
+                        .Average(rt => (double?)rt.Stars) ?? 0,
+                    Likes = _db.RecipeLikes.Count(l => l.RecipeId == r.RecipeId)
+                })
                 .ToListAsync();
 
-            return Ok(_mapper.Map<IEnumerable<RecipeReadDto>>(recentRecipes));
+            return Ok(recipes);
         }
 
         [HttpGet("analytics/{id:guid}")]

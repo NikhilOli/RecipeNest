@@ -85,10 +85,31 @@ namespace RecipeNest.API.Controllers
 
         // GET api/recipes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecipeReadDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<object>>> GetAll()
         {
-            var recipes = await _db.Recipes.Include(r => r.Chef).ToListAsync();
-            return Ok(_mapper.Map<IEnumerable<RecipeReadDto>>(recipes));
+            var recipes = await _db.Recipes
+                .Select(r => new
+                {
+                    r.RecipeId,
+                    r.Title,
+                    r.Ingredients,
+                    r.Instructions,
+                    r.ImageUrl,
+                    r.CreatedAt,
+                    AvgRating = _db.Ratings
+                        .Where(rt => rt.RecipeId == r.RecipeId)
+                        .Average(rt => (double?)rt.Stars) ?? 0,
+                    Likes = _db.RecipeLikes.Count(l => l.RecipeId == r.RecipeId),
+                    Chef = new
+                    {
+                        r.Chef.UserId,
+                        r.Chef.Name,
+                        r.Chef.Bio
+                    }
+                })
+                .ToListAsync();
+
+            return Ok(recipes);
         }
 
         // GET api/recipes/{id}
@@ -101,15 +122,27 @@ namespace RecipeNest.API.Controllers
         }
 
         // GET api/recipes/by-chef/{chefId}
-        [HttpGet("by-chef/{chefId:guid}")]
-        public async Task<ActionResult<IEnumerable<RecipeReadDto>>> GetByChefId(Guid chefId)
+        [HttpGet("by-chef/{id:guid}")]
+        public async Task<IActionResult> GetRecipesByChef(Guid id)
         {
             var recipes = await _db.Recipes
-                .Include(r => r.Chef)   
-                .Where(r => r.UserId == chefId)
+                .Where(r => r.UserId == id)
+                .Select(r => new
+                {
+                    r.RecipeId,
+                    r.Title,
+                    r.Ingredients,
+                    r.Instructions,
+                    r.ImageUrl,
+                    r.CreatedAt,
+                    AvgRating = _db.Ratings
+                        .Where(rt => rt.RecipeId == r.RecipeId)
+                        .Average(rt => (double?)rt.Stars) ?? 0,
+                    Likes = _db.RecipeLikes.Count(l => l.RecipeId == r.RecipeId)
+                })
                 .ToListAsync();
 
-            return Ok(_mapper.Map<IEnumerable<RecipeReadDto>>(recipes));
+            return Ok(recipes);
         }
 
         // PUT api/recipes/{id}

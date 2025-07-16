@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeNest.API.Data;
+using RecipeNest.API.Entities;
 using RecipeNest.API.Models;
 using RecipeNest.API.Services;
 
@@ -23,12 +24,28 @@ namespace RecipeNest.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
+            // 🔐 ADMIN OVERRIDE LOGIN
+            if (dto.Email == "admin@recipenest.com" && dto.Password == "Admin@123")
+            {
+                var admin = new FoodLover
+                {
+                    UserId = Guid.NewGuid(), // fake ID for frontend session
+                    Name = "Admin",
+                    Email = dto.Email,
+                    Role = "Admin"
+                };
+
+                var token = _auth.CreateToken(admin);
+                return Ok(new { Token = token, admin.Role, admin.UserId, admin.Name });
+            }
+
+            // 👤 NORMAL USER LOGIN
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (user == null || !_auth.VerifyPassword(user, dto.Password))
                 return Unauthorized("Invalid credentials");
 
-            var token = _auth.CreateToken(user);
-            return Ok(new { Token = token, user.Role, user.UserId, user.Name });
+            var tokenUser = _auth.CreateToken(user);
+            return Ok(new { Token = tokenUser, user.Role, user.UserId, user.Name });
         }
 
         [HttpPut("change-password")]
