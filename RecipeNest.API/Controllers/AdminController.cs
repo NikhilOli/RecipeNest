@@ -128,9 +128,28 @@ namespace RecipeNest.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllRatings()
         {
-            var ratings = await _db.Ratings.Include(r => r.Recipe).Include(r => r.User).ToListAsync();
-            return Ok(ratings);
+            var ratings = await _db.Ratings
+                .Include(r => r.Recipe)
+                .Include(r => r.User)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            var ratingDtos = ratings.Select(r => new RatingReadDto
+            {
+                RatingId = r.RatingId,
+                Stars = r.Stars,
+                Comment = r.Comment,
+                CreatedAt = r.CreatedAt,
+                UserId = r.UserId.ToString(),
+                UserName = r.User?.Name ?? "Unknown",
+                UserEmail = r.User?.Email ?? "Unknown",
+                RecipeId = r.RecipeId.ToString(),
+                RecipeTitle = r.Recipe?.Title ?? "Unknown"
+            }).ToList();
+
+            return Ok(ratingDtos);
         }
+
 
         [HttpGet("likes")]
         [Authorize(Roles = "Admin")]

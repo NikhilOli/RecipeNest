@@ -25,6 +25,7 @@ import Recipes from './pages/admin/Recipes'
 import UserDetails from './pages/admin/UserDetails'
 import Analytics from './pages/admin/Analytics'
 import Likes from './pages/admin/Likes'
+import Ratings from './pages/admin/Ratings'
 function App() {
 
   return (
@@ -75,6 +76,7 @@ function App() {
                   <Route path="/admin/users/:id" element={<UserDetails />} />
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="likes" element={<Likes />} />
+                  <Route path="ratings" element={<Ratings />} />
                   {/* other admin routes */}
                 </Route>
               </Routes>
