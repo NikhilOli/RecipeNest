@@ -42,16 +42,20 @@ export default function UserDetails() {
         <Card className="bg-[#1e1e1e] border border-gray-700 shadow">
             <CardContent>
             <h2 className="text-3xl font-bold text-[#ff6b6b] mb-4">{user.name}</h2>
-            <p className="text-gray-400 mb-1">Email: {user.email}</p>
-            <p className="text-gray-400 mb-1">Role: {user.role}</p>
-            <p className="text-gray-400 mb-2">Joined: {new Date(user.createdAt).toLocaleDateString("en-US", {
+            <p className="text-gray-300 mb-1">Email: {user.email}</p>
+            <p className="text-gray-300 mb-1">Role: {user.role}</p>
+            <p className="text-gray-300 mb-2">Joined: {new Date(user.createdAt).toLocaleDateString("en-US", {
                     day: "2-digit",
                     month: "long",
                     year: "numeric",
                 })}</p>
             {user.bio && <p className="text-gray-300 mb-4 whitespace-pre-wrap">{user.bio}</p>}
             {user.lastLogin && (
-                <p className="text-gray-500 mb-4">Last login: {new Date(user.lastLogin).toLocaleString()}</p>
+                <p className="text-gray-300 mb-4">Last login: {new Date(user.lastLogin).toLocaleDateString("en-US", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                })}</p>
             )}
 
             {/* Role-specific info */}

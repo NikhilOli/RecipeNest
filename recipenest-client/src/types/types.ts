@@ -46,3 +46,11 @@ export interface RatingInfo {
     stars: number;
     comment?: string;
 }
+export interface User {
+    userId: string;
+    name: string;
+    email?: string;
+    role: string;
+    followersCount?: number;
+    recipesCount?: number;
+}

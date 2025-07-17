@@ -91,8 +91,12 @@ const {user} = useAuth();
                 })}
                   </p>
                   {user.lastLogin && (
-                    <p className="text-gray-500 text-xs">
-                      Last login: {new Date(user.lastLogin).toLocaleString()}
+                    <p className="text-gray-300 text-xs">
+                      Last login: {new Date(user.lastLogin).toLocaleDateString("en-US", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
                     </p>
                   )}
 

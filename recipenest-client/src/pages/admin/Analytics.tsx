@@ -25,6 +25,9 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import ActivityLog from "@/components/admin/ActivityLog";
+import type { User } from "@/types/types";
+import TopChefsPanel from "@/components/admin/TopChefsPanel";
 
 interface DashboardStats {
   totalUsers: number;
@@ -44,6 +47,7 @@ const COLORS = ['#ff6b6b', '#4ecdc4', '#ffe066', '#b39ddb'];
 export default function Analytics() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     API.get<DashboardStats>("/admin/overview")
@@ -52,6 +56,12 @@ export default function Analytics() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    API.get<User[]>("/admin/users")
+      .then(res => setUsers(res.data))
+      .catch(() => toast.error("Failed to load users"));
+  }, []);
+  
   if (loading || !stats) {
     return (
       <div className="text-center p-16 text-gray-400">
@@ -87,7 +97,16 @@ export default function Analytics() {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={stats.usersGrowth}>
               <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-              <XAxis dataKey="date" stroke="#bbb" />
+              <XAxis 
+                    dataKey="date"
+                    tickFormatter={(date) =>
+                        new Intl.DateTimeFormat("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        }).format(new Date(date))
+                    }
+                    stroke="#bbb"
+                />
               <YAxis stroke="#bbb" />
               <Tooltip />
               <Line type="monotone" dataKey="count" stroke="#ff6b6b" strokeWidth={3} activeDot={{ r: 8 }} />
@@ -101,13 +120,23 @@ export default function Analytics() {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={stats.recipesGrowth}>
               <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-              <XAxis dataKey="date" stroke="#bbb" />
+              <XAxis 
+                    dataKey="date"
+                    tickFormatter={(date) =>
+                        new Intl.DateTimeFormat("en-US", {
+                        day: "2-digit",
+                        month: "short",
+                        }).format(new Date(date))
+                    }
+                    stroke="#bbb"
+                />
               <YAxis stroke="#bbb" />
               <Tooltip />
               <Line type="monotone" dataKey="count" stroke="#4ecdc4" strokeWidth={3} activeDot={{ r: 8 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
+        
       </section>
 
       {/* Pie Chart for User Role Distribution */}
@@ -125,7 +154,7 @@ export default function Analytics() {
               fill="#8884d8"
               label
             >
-              {pieData.map((entry, index) => (
+              {pieData.map((_, index) => (
                 <Cell key={`slice-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
@@ -135,6 +164,15 @@ export default function Analytics() {
       </section>
 
       {/* Placeholder for more charts: e.g. Likes growth, Follows growth, Ratings growth */}
+      {/* Add the Top Chefs Panel */}
+      <section>
+        <TopChefsPanel users={users} />
+      </section>
+
+      {/* Add the Activity Log below or side by side */}
+      <section>
+        <ActivityLog />
+      </section>
       {/* You can extend here by fetching and adding those charts using your APIs */}
     </div>
   );

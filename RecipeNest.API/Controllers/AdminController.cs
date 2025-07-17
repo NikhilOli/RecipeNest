@@ -132,12 +132,24 @@ namespace RecipeNest.API.Controllers
             return Ok(ratings);
         }
 
-        // GET ALL LIKES
         [HttpGet("likes")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllLikes()
         {
-            var likes = await _db.RecipeLikes.Include(l => l.Recipe).Include(l => l.User).ToListAsync();
+            var likes = await _db.RecipeLikes
+                .Include(l => l.Recipe)
+                .Include(l => l.User)
+                .Select(l => new
+                {
+                    UserId = l.UserId,
+                    UserName = l.User.Name,
+                    UserEmail = l.User.Email,
+                    RecipeId = l.RecipeId,
+                    RecipeTitle = l.Recipe.Title,
+                    LikedAt = l.CreatedAt
+                })
+                .ToListAsync();
+
             return Ok(likes);
         }
 
