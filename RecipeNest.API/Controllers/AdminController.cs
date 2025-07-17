@@ -203,20 +203,49 @@ namespace RecipeNest.API.Controllers
             var totalRecipes = await _db.Recipes.CountAsync();
             var totalLikes = await _db.RecipeLikes.CountAsync();
             var totalRatings = await _db.Ratings.CountAsync();
+            var totalFollows = await _db.Follows.CountAsync();
 
             var today = DateTime.UtcNow.Date;
             var usersGrowth = new List<object>();
             var recipesGrowth = new List<object>();
+            var likesGrowth = new List<object>();
+            var ratingsGrowth = new List<object>();
+            var followsGrowth = new List<object>();
 
-            // Example: last 7 days user/recipe counts
+            // Calculate daily counts for last 7 days
             for (int i = 6; i >= 0; i--)
             {
                 var day = today.AddDays(-i);
-                var usersOnDay = await _db.Users.CountAsync(u => u.CreatedAt.Date == day);
-                var recipesOnDay = await _db.Recipes.CountAsync(r => r.CreatedAt.Date == day);
 
-                usersGrowth.Add(new { date = day.ToString("yyyy-MM-dd"), count = usersOnDay });
-                recipesGrowth.Add(new { date = day.ToString("yyyy-MM-dd"), count = recipesOnDay });
+                usersGrowth.Add(new
+                {
+                    date = day.ToString("yyyy-MM-dd"),
+                    count = await _db.Users.CountAsync(u => u.CreatedAt.Date == day)
+                });
+
+                recipesGrowth.Add(new
+                {
+                    date = day.ToString("yyyy-MM-dd"),
+                    count = await _db.Recipes.CountAsync(r => r.CreatedAt.Date == day)
+                });
+
+                likesGrowth.Add(new
+                {
+                    date = day.ToString("yyyy-MM-dd"),
+                    count = await _db.RecipeLikes.CountAsync(l => l.CreatedAt.Date == day)
+                });
+
+                ratingsGrowth.Add(new
+                {
+                    date = day.ToString("yyyy-MM-dd"),
+                    count = await _db.Ratings.CountAsync(r => r.CreatedAt.Date == day)
+                });
+
+                followsGrowth.Add(new
+                {
+                    date = day.ToString("yyyy-MM-dd"),
+                    count = await _db.Follows.CountAsync(f => f.FollowedAt.Date == day)
+                });
             }
 
             return Ok(new
@@ -226,9 +255,14 @@ namespace RecipeNest.API.Controllers
                 totalRecipes,
                 totalLikes,
                 totalRatings,
+                totalFollows,
                 usersGrowth,
-                recipesGrowth
+                recipesGrowth,
+                likesGrowth,
+                ratingsGrowth,
+                followsGrowth
             });
         }
+
     }
 }

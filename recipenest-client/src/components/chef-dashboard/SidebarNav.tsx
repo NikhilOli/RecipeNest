@@ -10,7 +10,7 @@ const navItems = [
 
 export default function SidebarNav({ active, onSelect }: { active: string; onSelect: (menu: string) => void }) {
   return (
-    <aside className="bg-[#171717] text-white min-h-screen w-60 flex flex-col py-8 px-4 fixed">
+    <aside className="bg-[#171717] text-white min-h-screen w-60 flex flex-col py-8 px-4">
       <h2 className="text-2xl font-extrabold text-[#4ecdc4] mb-10 pl-2">Chef Dashboard</h2>
       <nav className="flex flex-col gap-2">
         {navItems.map(({ label, icon: Icon }) => (

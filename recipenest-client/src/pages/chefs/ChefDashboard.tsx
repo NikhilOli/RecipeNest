@@ -37,7 +37,7 @@ export default function ChefDashboard() {
     return (
         <div className="flex min-h-screen bg-[#f7f7f7]">
         <SidebarNav active={activeMenu} onSelect={setActiveMenu} />
-        <main className="flex-1 p-8 pt-16 ml-60 overflow-auto">{renderContent()}</main>
+        <main className="flex-1 p-8 pt-16 overflow-auto">{renderContent()}</main>
         </div>
     );
 }

@@ -26,6 +26,7 @@ import UserDetails from './pages/admin/UserDetails'
 import Analytics from './pages/admin/Analytics'
 import Likes from './pages/admin/Likes'
 import Ratings from './pages/admin/Ratings'
+import Follows from './pages/admin/Follows'
 function App() {
 
   return (
@@ -77,6 +78,7 @@ function App() {
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="likes" element={<Likes />} />
                   <Route path="ratings" element={<Ratings />} />
+                  <Route path="follows" element={<Follows />} />
                   {/* other admin routes */}
                 </Route>
               </Routes>

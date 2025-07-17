@@ -3,22 +3,19 @@ import {
     Users,
     BookOpen,
     BarChart2,
-    MessageCircle,
     Heart,
     Star,
-    Settings,
 } from "lucide-react";
 
 const links = [
+    
     { to: "/admin", label: "Dashboard", Icon: BarChart2 },
     { to: "/admin/users", label: "Users", Icon: Users },
     { to: "/admin/recipes", label: "Recipes", Icon: BookOpen },
     { to: "/admin/analytics", label: "Analytics", Icon: BarChart2 },
-    { to: "/admin/comments", label: "Comments", Icon: MessageCircle },
     { to: "/admin/likes", label: "Likes", Icon: Heart },
     { to: "/admin/ratings", label: "Ratings", Icon: Star },
-    { to: "/admin/follows", label: "Follows", Icon: Users }, // Consider different icon
-    { to: "/admin/settings", label: "Settings", Icon: Settings },
+    { to: "/admin/follows", label: "Follows", Icon: Users }, 
 ];
 
 export default function Sidebar() {
