@@ -4,7 +4,11 @@ export interface RecipeDetailProps {
     userId: string;
     recipeId: string;
     title: string;
+    chef: {
+    userId: string;
     chefName: string;
+    bio?: string;
+    };
     ingredients: string;
     instructions: string;
     imageUrl?: string;

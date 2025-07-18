@@ -31,7 +31,7 @@ function App() {
 
   return (
     <>  
-        <div className='min-h-screen w-full overflow-x-hidden bg-[#171717]'>     
+        <div className='min-h-screen w-full flex flex-col overflow-x-hidden bg-[#171717]'>     
           <BrowserRouter>
             <AuthProvider>
             <Toaster/>

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChefHat, Heart, Star } from "lucide-react";
 import API from "@/services/api";
-import type { RecipeDetailProps } from "@/types/types";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-hot-toast";
 
@@ -14,7 +13,16 @@ interface RatingInfo {
     stars: number;
     comment?: string;
 }
-
+export interface RecipeDetailProps {
+    userId: string;
+    recipeId: string;
+    title: string;
+    chefName: string;
+    ingredients: string;
+    instructions: string;
+    imageUrl?: string;
+    createdAt?: string;
+}
 const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -53,23 +61,23 @@ const RecipeDetails = () => {
     const handleLike = async () => {
     if (!user) return toast.error("Login required to like");
     try {
-      if (hasLiked) {
-        await API.delete(`/recipeactions/unlike`, {
-          params: { userId: user.userId, recipeId: id },
-        });
-        toast.success("Unliked");
-        setHasLiked(false);
-      } else {
-        await API.post(`/recipeactions/like`, null, {
-          params: { userId: user.userId, recipeId: id },
-        });
-        toast.success("Liked");
-        setHasLiked(true);
-      }
-    } catch {
-      toast.error("Action failed");
-    }
-  };
+        if (hasLiked) {
+            await API.delete(`/recipeactions/unlike`, {
+            params: { userId: user.userId, recipeId: id },
+            });
+            toast.success("Unliked");
+            setHasLiked(false);
+        } else {
+            await API.post(`/recipeactions/like`, null, {
+            params: { userId: user.userId, recipeId: id },
+            });
+            toast.success("Liked");
+            setHasLiked(true);
+        }
+        } catch {
+        toast.error("Action failed");
+        }
+    };
 
     const handleRate = async () => {
         if (!user) return toast.error("Login required to rate");
@@ -100,7 +108,7 @@ const RecipeDetails = () => {
     if (!recipe) return <div className="text-center py-24">Loading...</div>;
 
     return (
-        <div className="max-w-3xl mx-auto px-4 pt-24 pb-12">
+        <div className="max-w-3xl mx-auto px-4 pt-24 pb-12 min-h-screen flex">
             <Card className="bg-[#1e1e1e] border-none shadow-xl">
                 <CardContent className="p-8">
                     <img

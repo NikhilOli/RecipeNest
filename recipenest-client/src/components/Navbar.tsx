@@ -16,13 +16,14 @@ const Navbar = () => {
 
   // Define menu items based on role
   const guestLinks = [
+    { label: "Home", path: "/" },
     { label: "Chefs", path: "/chefs" },
     { label: "Recipes", path: "/recipes" },
   ];
 
   const chefLinks = [
     { label: "Dashboard", path: "/chef/dashboard" },
-    // { label: "My Recipes", path: "/chef/recipes" },
+    { label: "My Recipes", path: "/chef/recipes" },
   ];
 
   const foodLoverLinks = [
@@ -31,18 +32,18 @@ const Navbar = () => {
     { label: "Profile", path: "/profile" },
   ];
 
-  // const commonLoggedInLinks = [
-  //   { label: "Profile", path: "/profile" },
-  // ];
+  const commonLoggedInLinks = [
+    { label: "Home", path: "/" },
+  ];
 
   // Build links based on user role
   let links = guestLinks;
   if (user?.role === "Chef") {
-    links = [...chefLinks, ];
+    links = [...commonLoggedInLinks, ...chefLinks, ];
   } else if (user?.role === "FoodLover") {
-    links = [...foodLoverLinks, ];
+    links = [...commonLoggedInLinks, ...foodLoverLinks, ];
   } else if (user?.role === "Admin") {
-    links = [{ label: "Admin Panel", path: "/admin" }, ];
+    links = [...commonLoggedInLinks, { label: "Admin Panel", path: "/admin" }, ];
   }
   
 

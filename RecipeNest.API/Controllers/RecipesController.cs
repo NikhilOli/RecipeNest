@@ -103,7 +103,7 @@ namespace RecipeNest.API.Controllers
                     Chef = new
                     {
                         r.Chef.UserId,
-                        r.Chef.Name,
+                        ChefName = r.Chef.Name,
                         r.Chef.Bio
                     }
                 })

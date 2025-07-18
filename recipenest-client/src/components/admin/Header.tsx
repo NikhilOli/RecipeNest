@@ -1,12 +1,19 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, ChevronDown } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AdminHeader() {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const adminName = localStorage.getItem("name") || "Admin";
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout(); // calls context logout which clears localStorage and resets user
+    navigate("/");
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -19,10 +26,6 @@ export default function AdminHeader() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
 
   // Get initials from name for avatar fallback
   const initials = adminName

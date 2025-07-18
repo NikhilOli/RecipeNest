@@ -20,7 +20,7 @@ const RecipeList = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pt-24 pb-12 min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 pt-24 pb-12">
       <h2 className="text-3xl font-bold text-[#ff6b6b] mb-6">All Recipes</h2>
         <div className="mb-6 flex items-center gap-3">
             <Search className="text-[#4ecdc4]" />
@@ -29,7 +29,7 @@ const RecipeList = () => {
             placeholder="Search recipes..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="max-w-xs"
+            className="max-w-xs text-white"
             />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -56,7 +56,7 @@ const RecipeList = () => {
                         navigate(`/chefs/${recipe.userId}`);
                         }}
                     >
-                        {recipe.chefName}
+                        {recipe.chef.chefName ?? "Unknown"}
                     </span>
                     </div>
                     <div className="mt-2 text-gray-400 line-clamp-2">{recipe.ingredients}</div>

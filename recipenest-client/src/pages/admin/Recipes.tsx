@@ -13,7 +13,7 @@ interface Recipe {
     createdAt: string;
     isPublished?: boolean;
     chef: {
-        name: string;
+        chefName: string;
     };
     likes: number;
     avgRating: number;
@@ -63,8 +63,8 @@ export default function Recipes() {
 
     const filteredRecipes = recipes.filter(
         (r) =>
-        r.title.toLowerCase().includes(search.toLowerCase()) ||
-        r.chef.name.toLowerCase().includes(search.toLowerCase())
+        r.title?.toLowerCase().includes(search.toLowerCase()) ||
+        r.chef?.chefName.toLowerCase().includes(search.toLowerCase())
     );
 
     if (loading) return <div className="text-center p-16">Loading recipes...</div>;
@@ -98,7 +98,7 @@ export default function Recipes() {
                     <h3 className="text-xl font-semibold text-[#ff6b6b] mb-1 truncate">
                     {recipe.title}
                     </h3>
-                    <p className="text-gray-400 text-sm mb-2">By {recipe.chef?.name ?? "Unknown"}</p>
+                    <p className="text-gray-400 text-sm mb-2">By {recipe.chef?.chefName ?? "Unknown"}</p>
                     {recipe.isPublished !== undefined && (
                     <p
                         className={`mb-2 font-semibold ${
